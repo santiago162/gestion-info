@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from service import crear_usuario, listar_usuarios
+from service import inicializar, crear_usuario, listar_usuarios
 
 
 def imprimir_linea():
@@ -54,15 +54,17 @@ OPCIONES = {
 
 def mostrar_menu():
     print("\n╔══════════════════════════════╗")
-    print("║    GESTIÓN DE USUARIOS        ║")
-    print("╠═══════════════════════════════╣")
+    print("║    GESTIÓN DE USUARIOS       ║")
+    print("╠══════════════════════════════╣")
     for clave, (descripcion, _) in OPCIONES.items():
         print(f"║  {clave}. {descripcion:<26}║")
-    print("╚═══════════════════════════════╝")
+    print("╚══════════════════════════════╝")
 
 
 def main():
     print("Sistema listo")
+    inicializar()   
+
     while True:
         mostrar_menu()
         opcion = input("Selecciona una opción: ").strip()

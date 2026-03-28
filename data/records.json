@@ -1,0 +1,26 @@
+[
+  {
+    "id": "b7e2d04f",
+    "nombre": "Carlos Ruiz",
+    "email": "carlos@mail.com",
+    "estado": "inactivo"
+  },
+  {
+    "id": "ed759b3e",
+    "nombre": "santiago",
+    "email": "santiago@gamil.com",
+    "estado": "inactivo"
+  },
+  {
+    "id": "b72da2c2",
+    "nombre": "manuala",
+    "email": "manuela@gamil.com",
+    "estado": "activo"
+  },
+  {
+    "id": "04b7ef80",
+    "nombre": "simon",
+    "email": "simon@gamil.com",
+    "estado": "activo"
+  }
+]

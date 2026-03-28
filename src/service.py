@@ -7,13 +7,27 @@ from validate import (
     liberar_id,
     liberar_email,
 )
+from file import load_data, save_data
 
 _usuarios: list[dict] = []
 
 
+def inicializar():
+    """
+    Carga los usuarios desde el archivo al arrancar el programa.
+    Reconstruye los sets de IDs y emails usados.
+    """
+    global _usuarios
+    _usuarios = load_data()
+
+    for u in _usuarios:
+        registrar_id(u['id'])
+        registrar_email(u['email'])
+
+
 def crear_usuario(**kwargs) -> dict:
     """
-    Crea un usuario validado y lo guarda en memoria.
+    Crea un usuario validado, lo guarda en memoria y persiste en archivo.
     El ID se genera automáticamente con uuid.
     """
     datos = validar_usuario(**kwargs)
@@ -27,6 +41,8 @@ def crear_usuario(**kwargs) -> dict:
 
     usuario = {'id': id_generado, **datos}
     _usuarios.append(usuario)
+
+    save_data(_usuarios)
     return usuario
 
 
