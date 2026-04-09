@@ -3,15 +3,17 @@ from service import (
     new_register, list_records, search_record,
     update_record, delete_record
 )
+from integration import generar_usuarios_falsos
 
 init(autoreset=True)
 
 
-def ok(msg):       print(Fore.GREEN  + f"✅ {msg}")
-def error(msg):    print(Fore.RED    + f"⚠️  {msg}")
-def info(msg):     print(Fore.CYAN   + f"   {msg}")
-def titulo(msg):   print(Fore.YELLOW + Style.BRIGHT + f"\n{msg}")
-def linea():       print(Fore.WHITE  + Style.DIM + "-" * 45)
+
+def ok(msg):     print(Fore.GREEN  + f"✅ {msg}")
+def error(msg):  print(Fore.RED    + f"⚠️  {msg}")
+def info(msg):   print(Fore.CYAN   + f"   {msg}")
+def titulo(msg): print(Fore.YELLOW + Style.BRIGHT + f"\n{msg}")
+def linea():     print(Fore.WHITE  + Style.DIM + "-" * 45)
 
 
 def imprimir_usuario(u: dict):
@@ -90,7 +92,6 @@ def opcion_actualizar():
     try:
         id_u = input(Fore.CYAN + "ID del usuario a actualizar: " + Style.RESET_ALL).strip()
 
-        
         u_actual = search_record(id_usuario=id_u)
         info("Usuario actual:")
         imprimir_usuario(u_actual)
@@ -137,24 +138,59 @@ def opcion_eliminar():
         error(e)
 
 
+def opcion_generar_falsos():
+    titulo("🤖 GENERAR USUARIOS FALSOS")
+    linea()
+    try:
+        entrada = input(Fore.CYAN + "¿Cuántos usuarios generar? (Enter = 10): " + Style.RESET_ALL).strip()
+
+        if entrada == "":
+            cantidad = 10
+        else:
+            cantidad = int(entrada)
+            if cantidad <= 0:
+                error("La cantidad debe ser mayor a 0.")
+                return
+            if cantidad > 100:
+                error("Máximo 100 usuarios por generación.")
+                return
+
+        print(Fore.WHITE + Style.DIM + f"\n   Generando {cantidad} usuario(s)...\n")
+
+        creados, errores = generar_usuarios_falsos("demo", cantidad=cantidad)
+
+        linea()
+        for u in creados:
+            imprimir_usuario(u)
+
+        linea()
+        ok(f"{len(creados)} usuario(s) generado(s) y guardados en archivo.")
+        if errores > 0:
+            info(f"{errores} usuario(s) omitidos por email duplicado.")
+
+    except ValueError:
+        error("Debes ingresar un número entero válido.")
+
+
 OPCIONES = {
-    "1": ("Crear usuario",      opcion_crear),
-    "2": ("Listar usuarios",    opcion_listar),
-    "3": ("Buscar usuario",     opcion_buscar),
-    "4": ("Actualizar usuario", opcion_actualizar),
-    "5": ("Eliminar usuario",   opcion_eliminar),
-    "0": ("Salir",              None),
+    "1": ("Crear usuario",           opcion_crear),
+    "2": ("Listar usuarios",         opcion_listar),
+    "3": ("Buscar usuario",          opcion_buscar),
+    "4": ("Actualizar usuario",      opcion_actualizar),
+    "5": ("Eliminar usuario",        opcion_eliminar),
+    "6": ("Generar usuarios falsos", opcion_generar_falsos),
+    "0": ("Salir",                   None),
 }
 
 
 def mostrar_menu():
-    print(Fore.YELLOW + Style.BRIGHT + "\n╔══════════════════════════════╗")
-    print(Fore.YELLOW + Style.BRIGHT +   "║    GESTIÓN DE USUARIOS       ║")
-    print(Fore.YELLOW + Style.BRIGHT +   "╠══════════════════════════════╣")
+    print(Fore.YELLOW + Style.BRIGHT + "\n╔════════════════════════════════════╗")
+    print(Fore.YELLOW + Style.BRIGHT +   "║      GESTIÓN DE USUARIOS           ║")
+    print(Fore.YELLOW + Style.BRIGHT +   "╠════════════════════════════════════╣")
     for clave, (descripcion, _) in OPCIONES.items():
         color = Fore.RED if clave == "0" else Fore.WHITE
-        print(Fore.YELLOW + Style.BRIGHT + "║" + color + f"  {clave}. {descripcion:<26}" + Fore.YELLOW + Style.BRIGHT + "║")
-    print(Fore.YELLOW + Style.BRIGHT +   "╚══════════════════════════════╝")
+        print(Fore.YELLOW + Style.BRIGHT + "║" + color + f"  {clave}. {descripcion:<32}" + Fore.YELLOW + Style.BRIGHT + "║")
+    print(Fore.YELLOW + Style.BRIGHT +   "╚════════════════════════════════════╝")
 
 
 def ejecutar_menu():
@@ -181,4 +217,4 @@ def ejecutar_menu():
         elif opcion == "":
             error("Debes escribir una opción.")
         else:
-            error(f"Opción '{opcion}' no válida. Elige entre 0 y {max(k for k in OPCIONES if k != '0')}.")
+            error(f"Opción '{opcion}' no válida. Elige entre 0 y 6.")
